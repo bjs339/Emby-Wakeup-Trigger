@@ -1,0 +1,15 @@
+E:\Workspace\Emby Wakeup Trigger\EmbyWakeupTrigger\bin\Debug\EmbyWakeupTrigger.exe.config
+E:\Workspace\Emby Wakeup Trigger\EmbyWakeupTrigger\bin\Debug\install.bat
+E:\Workspace\Emby Wakeup Trigger\EmbyWakeupTrigger\bin\Debug\uninstall.bat
+E:\Workspace\Emby Wakeup Trigger\EmbyWakeupTrigger\bin\Debug\EmbyWakeupTrigger.exe
+E:\Workspace\Emby Wakeup Trigger\EmbyWakeupTrigger\bin\Debug\EmbyWakeupTrigger.pdb
+E:\Workspace\Emby Wakeup Trigger\EmbyWakeupTrigger\bin\Debug\Microsoft.Win32.TaskScheduler.dll
+E:\Workspace\Emby Wakeup Trigger\EmbyWakeupTrigger\bin\Debug\Newtonsoft.Json.dll
+E:\Workspace\Emby Wakeup Trigger\EmbyWakeupTrigger\bin\Debug\Microsoft.Win32.TaskScheduler.pdb
+E:\Workspace\Emby Wakeup Trigger\EmbyWakeupTrigger\bin\Debug\Microsoft.Win32.TaskScheduler.xml
+E:\Workspace\Emby Wakeup Trigger\EmbyWakeupTrigger\bin\Debug\Newtonsoft.Json.xml
+E:\Workspace\Emby Wakeup Trigger\EmbyWakeupTrigger\obj\Debug\EmbyWakeupTrigger.ProjectInstaller.resources
+E:\Workspace\Emby Wakeup Trigger\EmbyWakeupTrigger\obj\Debug\EmbyWakeupTrigger.csproj.GenerateResource.Cache
+E:\Workspace\Emby Wakeup Trigger\EmbyWakeupTrigger\obj\Debug\EmbyWakeupTrigger.exe
+E:\Workspace\Emby Wakeup Trigger\EmbyWakeupTrigger\obj\Debug\EmbyWakeupTrigger.pdb
+E:\Workspace\Emby Wakeup Trigger\EmbyWakeupTrigger\obj\Debug\EmbyWakeupTrigger.csprojResolveAssemblyReference.cache
