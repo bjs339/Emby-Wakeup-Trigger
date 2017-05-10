@@ -99,26 +99,24 @@ namespace EmbyWakeupTrigger
 
             try
             {
+                string json = string.Empty;
                 // Open the file and read the json obj
                 using (StreamReader r = new StreamReader(timerPath))
                 {
-                    string json = r.ReadToEnd();
-                    List<Item> items = JsonConvert.DeserializeObject<List<Item>>(json);
-                    foreach (Item item in items)
+                    json = r.ReadToEnd();
+                }
+                List<Item> items = JsonConvert.DeserializeObject<List<Item>>(json);
+                List<Item> newItems = items.FindAll(x => x.Status.Equals("New"));
+                foreach (Item item in newItems)
+                {
+                    if (ScheduledTaskExists(item))
                     {
-                        if (item.Status == "New")
-                        {
-                            if (ScheduledTaskExists(item))
-                            {
-                                UpdateScheduledTask(item);
-                            }
-                            else
-                            {
-                                CreateScheduledTask(item);
-                            }
-                        }
+                        UpdateScheduledTask(item);
                     }
-
+                    else
+                    {
+                        CreateScheduledTask(item);
+                    }
                 }
             }
 

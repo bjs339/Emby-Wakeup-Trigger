@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            this.ServiceName = "SetWakeupTrigger";
+            this.ServiceName = "Emby Wakeup Trigger";
         }
 
         #endregion
