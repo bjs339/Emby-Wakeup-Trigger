@@ -2,7 +2,8 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/EmbyWakeupTrigger/obj/Debug/CoreCompileInputs.cache
-/.vs/slnx.sqlite
-/EmbyWakeupTrigger/obj/Release/CoreCompileInputs.cache
-/.vs/slnx.sqlite
+/.vs
+/EmbyWakeupTrigger/bin/Debug
+/EmbyWakeupTrigger/bin/Release
+/EmbyWakeupTrigger/obj/Debug
+/EmbyWakeupTrigger/obj/Release
