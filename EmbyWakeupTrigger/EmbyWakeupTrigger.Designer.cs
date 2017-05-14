@@ -1,6 +1,6 @@
 ﻿namespace EmbyWakeupTrigger
 {
-    partial class EmbyWakeupTrigger
+    partial class EmbyWakeupService
     {
         /// <summary> 
         /// Required designer variable.

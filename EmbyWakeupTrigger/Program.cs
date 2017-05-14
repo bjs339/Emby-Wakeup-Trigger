@@ -17,29 +17,31 @@ namespace EmbyWakeupTrigger
                 EventLog.CreateEventSource("Emby Wakeup Trigger", "Application");
             }
 
-            if (Environment.UserInteractive)
-            {
-                EmbyWakeupTrigger embyWakeupTrigger = new EmbyWakeupTrigger(args);
-                //EventLog.WriteEntry("Emby Wakeup Trigger", "Starting up");
+#if DEBUG
+            EmbyWakeupService embyWakeupService = new EmbyWakeupService(args);
+            //EventLog.WriteEntry("Emby Wakeup Trigger", "Starting up");
 
-                // To debug getting the timers.json location
-                //embyWakeupTrigger.GetEmbyDirectory();
+            // To debug getting the timers.json location
+            //embyWakeupTrigger.GetEmbyDirectory();
 
-                // To debug reading the json and creating the scheduled task
-                embyWakeupTrigger.timerPath = "E:\\Workspace\\Emby Wakeup Trigger\\test\\timers.json";
-                object x = new object();
-                FileSystemEventArgs e = new FileSystemEventArgs(WatcherChangeTypes.Changed, "", "");
-                embyWakeupTrigger.WatcherChanged(x, e);
-            }
-            else
+            // To debug reading the json and creating the scheduled task
+            embyWakeupService.timerPath = "E:\\Workspace\\Emby Wakeup Trigger\\test\\timers.json";
+            object x = new object();
+            FileSystemEventArgs e = new FileSystemEventArgs(WatcherChangeTypes.Changed, "", "");
+            embyWakeupService.WatcherChanged(x, e);
+#else
+            // Don't use service; instead, run one time and then exit
+            //RecordingReader recordingReader = new RecordingReader();
+            //string timerPath = string.Concat(recordingReader.GetEmbyDirectory(), "\\data\\livetv\\timers.json");
+            //recordingReader.ReadRecordings(timerPath);
+
+            ServiceBase[] ServicesToRun;
+            ServicesToRun = new ServiceBase[]
             {
-                ServiceBase[] ServicesToRun;
-                ServicesToRun = new ServiceBase[]
-                {
-                new EmbyWakeupTrigger(args)
-                };
-                ServiceBase.Run(ServicesToRun);
-            }            
+                new EmbyWakeupService(args)
+            };
+            ServiceBase.Run(ServicesToRun);
+#endif
         }
     }
 }
