@@ -30,17 +30,25 @@ namespace EmbyWakeupTrigger
             FileSystemEventArgs e = new FileSystemEventArgs(WatcherChangeTypes.Changed, "", "");
             embyWakeupService.WatcherChanged(x, e);
 #else
-            // Don't use service; instead, run one time and then exit
-            //RecordingReader recordingReader = new RecordingReader();
-            //string timerPath = string.Concat(recordingReader.GetEmbyDirectory(), "\\data\\livetv\\timers.json");
-            //recordingReader.ReadRecordings(timerPath);
 
-            ServiceBase[] ServicesToRun;
-            ServicesToRun = new ServiceBase[]
+            if (args.Length > 0 && args[0] == "--service")
             {
+                // Run as a service
+                ServiceBase[] ServicesToRun;
+                ServicesToRun = new ServiceBase[]
+                {
                 new EmbyWakeupService(args)
-            };
-            ServiceBase.Run(ServicesToRun);
+                };
+                ServiceBase.Run(ServicesToRun);
+            }
+            else
+            {
+                // Don't use service; instead, run one time and then exit
+                RecordingReader recordingReader = new RecordingReader();
+                string timerPath = string.Concat(recordingReader.GetEmbyDirectory(), "\\data\\livetv\\timers.json");
+                recordingReader.ReadRecordings(timerPath);
+            }
+
 #endif
         }
     }
