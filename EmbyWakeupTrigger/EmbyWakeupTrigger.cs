@@ -28,12 +28,13 @@ namespace EmbyWakeupTrigger
         public int Priority;
     }
 
-    public partial class EmbyWakeupTrigger : ServiceBase
+    public partial class EmbyWakeupService : ServiceBase
     {
+        RecordingReader recordingReader = new RecordingReader();
         public string timerPath = string.Empty;
         protected FileSystemWatcher watcher;        
 
-        public EmbyWakeupTrigger(string[] args)
+        public EmbyWakeupService(string[] args)
         {
             InitializeComponent();
         }
@@ -43,8 +44,8 @@ namespace EmbyWakeupTrigger
 #if DEBUG
             System.Diagnostics.Debugger.Launch();
 #endif
-
-            timerPath = string.Concat(GetEmbyDirectory(), "\\data\\livetv\\timers.json");            
+            
+            timerPath = string.Concat(recordingReader.GetEmbyDirectory(), "\\data\\livetv\\timers.json");            
 
             if (!File.Exists(timerPath))
             {
@@ -59,7 +60,19 @@ namespace EmbyWakeupTrigger
             watcher.Changed += new FileSystemEventHandler(WatcherChanged);
             watcher.EnableRaisingEvents = true;
         }
+        
+        public void WatcherChanged(object source, FileSystemEventArgs e)
+        {
+            recordingReader.ReadRecordings(timerPath);
+        }
 
+        protected override void OnStop()
+        {
+        }
+    }
+
+    public class RecordingReader
+    {
         public string GetEmbyDirectory()
         {
             string embyPath = string.Empty;
@@ -89,8 +102,10 @@ namespace EmbyWakeupTrigger
             return embyPath;
         }
 
-        public void WatcherChanged(object source, FileSystemEventArgs e)
+        public void ReadRecordings(string timerPath)
         {
+            ScheduledTaskManager scheduledTaskManager = new ScheduledTaskManager();
+
             // Pause to avoid conflict with Emby
             if (!Environment.UserInteractive)
             {
@@ -109,13 +124,13 @@ namespace EmbyWakeupTrigger
                 List<Item> newItems = items.FindAll(x => x.Status.Equals("New"));
                 foreach (Item item in newItems)
                 {
-                    if (ScheduledTaskExists(item))
+                    if (scheduledTaskManager.ScheduledTaskExists(item))
                     {
-                        UpdateScheduledTask(item);
+                        scheduledTaskManager.UpdateScheduledTask(item);
                     }
                     else
                     {
-                        CreateScheduledTask(item);
+                        scheduledTaskManager.CreateScheduledTask(item);
                     }
                 }
             }
@@ -125,8 +140,12 @@ namespace EmbyWakeupTrigger
                 EventLog.WriteEntry("Emby Wakeup Trigger", ex.Message);
             }
         }
+    }
 
-        private bool ScheduledTaskExists(Item item)
+    public class ScheduledTaskManager
+    {
+
+        public bool ScheduledTaskExists(Item item)
         {
             TaskService taskService = new TaskService();
             Task task = taskService.GetTask(item.Id);
@@ -136,7 +155,7 @@ namespace EmbyWakeupTrigger
                 return true;
         }
 
-        private void CreateScheduledTask(Item item)
+        public void CreateScheduledTask(Item item)
         {
             // Get the datetime from the last (most recently added) item
             DateTime startTime;
@@ -170,7 +189,7 @@ namespace EmbyWakeupTrigger
             }
         }
 
-        private void UpdateScheduledTask(Item item)
+        public void UpdateScheduledTask(Item item)
         {
             TaskService taskService = new TaskService();
             Task task = taskService.GetTask(item.Id);
@@ -179,28 +198,23 @@ namespace EmbyWakeupTrigger
                 DateTime startTime;
                 if (DateTime.TryParse(item.StartDate, out startTime))
                 {
-                    startTime = startTime.AddSeconds(Convert.ToDouble(item.PrePaddingSeconds * -1));                    
+                    startTime = startTime.AddSeconds(Convert.ToDouble(item.PrePaddingSeconds * -1));
 
                     if (startTime != task.NextRunTime)
                     {
                         DeleteScheduledTask(item);
                         CreateScheduledTask(item);
-                    }                    
+                    }
                 }
             }
         }
 
-        private void DeleteScheduledTask(Item item)
+        public void DeleteScheduledTask(Item item)
         {
             TaskService taskService = new TaskService();
             Task task = taskService.GetTask(item.Id);
             if (task != null)
                 TaskService.Instance.RootFolder.DeleteTask(item.Id);
         }
-
-        protected override void OnStop()
-        {
-        }
-
     }
 }
