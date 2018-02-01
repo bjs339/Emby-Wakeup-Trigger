@@ -79,17 +79,32 @@ namespace EmbyWakeupTrigger
 
             try
             {
-                ServiceController[] serviceController;
-                serviceController = ServiceController.GetServices();
-
-                foreach (ServiceController service in serviceController)
+                // First, see if there's a config file with the path to timers.json
+                string configPath = string.Concat(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "\\config.txt");
+                if (File.Exists(configPath))
                 {
-                    if (service.ServiceName == "Emby")
+                    string[] lines = File.ReadAllLines(configPath);
+                    Dictionary<string, string> dict = new Dictionary<string, string>();
+                    for (int i = 0; i < lines.Length; i++)
                     {
-                        ManagementObject wmiService = new ManagementObject("Win32_Service.Name='" + service.ServiceName + "'");
-                        wmiService.Get();
-                        string servicePath = wmiService["PathName"].ToString().Replace("\"", "");
-                        embyPath = Directory.GetParent(Path.GetDirectoryName(servicePath)).FullName;
+                        dict.Add(lines[i].Split('=')[0].Trim(), lines[i].Split('=')[1].Trim());
+                    }
+                    dict.TryGetValue("timerPath", out embyPath);
+                }
+                else
+                {
+                    ServiceController[] serviceController;
+                    serviceController = ServiceController.GetServices();
+
+                    foreach (ServiceController service in serviceController)
+                    {
+                        if (service.ServiceName == "Emby")
+                        {
+                            ManagementObject wmiService = new ManagementObject("Win32_Service.Name='" + service.ServiceName + "'");
+                            wmiService.Get();
+                            string servicePath = wmiService["PathName"].ToString().Replace("\"", "");
+                            embyPath = Directory.GetParent(Path.GetDirectoryName(servicePath)).FullName;
+                        }
                     }
                 }
             }

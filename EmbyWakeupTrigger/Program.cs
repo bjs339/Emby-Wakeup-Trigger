@@ -22,13 +22,14 @@ namespace EmbyWakeupTrigger
             //EventLog.WriteEntry("Emby Wakeup Trigger", "Starting up");
 
             // To debug getting the timers.json location
-            //embyWakeupTrigger.GetEmbyDirectory();
+            //RecordingReader recordingReader = new RecordingReader();
+            //recordingReader.GetEmbyDirectory();
 
             // To debug reading the json and creating the scheduled task
-            embyWakeupService.timerPath = "E:\\Workspace\\Emby Wakeup Trigger\\test\\timers.json";
-            object x = new object();
-            FileSystemEventArgs e = new FileSystemEventArgs(WatcherChangeTypes.Changed, "", "");
-            embyWakeupService.WatcherChanged(x, e);
+            //embyWakeupService.timerPath = "E:\\Workspace\\Emby Wakeup Trigger\\test\\timers.json";
+            //object x = new object();
+            //FileSystemEventArgs e = new FileSystemEventArgs(WatcherChangeTypes.Changed, "", "");
+            //embyWakeupService.WatcherChanged(x, e);
 #else
 
             if (args.Length > 0 && args[0] == "--service")
